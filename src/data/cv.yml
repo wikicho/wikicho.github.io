@@ -1,0 +1,46 @@
+# RenderCV YAML format — https://docs.rendercv.com/
+# Used by the CV page when site.cv.format is 'rendercv'.
+
+cv:
+  name: Wonsub Cho
+  location: Suwon, Republic of Korea
+  email: wikicho1674@gmail.com
+  website: https://wikicho.github.io
+  summary: Ph.D. student in theoretical physics studying particle dark matter, cosmology, and the early universe.
+  social_networks:
+    - network: GitHub
+      username: wikicho
+
+  sections:
+    education:
+      - institution: Sungkyunkwan University
+        area: Physics
+        degree: Ph.D.
+        start_date: 2023-03
+        end_date: present
+
+      - institution: Sungkyunkwan University
+        area: Physics
+        degree: M.S.
+        start_date: 2020-08
+        end_date: 2022-08
+        highlights:
+          - 'Thesis: Effect of boosted dark matter by cosmic particles'
+
+    experience:
+      - company: ASML Korea
+        position: Metrology/Sensor Engineer
+        start_date: 2022-07
+        end_date: 2022-10
+
+    skills:
+      - label: Programming
+        details: C/C++, Python
+      - label: Scientific computing
+        details: Mathematica
+
+    interests:
+      - label: Dark Matter
+        details: Relic density, sterile-neutrino dark matter, boosted dark matter
+      - label: Early Universe
+        details: First-order phase transitions, baryogenesis, inflation
