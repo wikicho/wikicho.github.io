@@ -34,11 +34,11 @@ function tagSimilarity(a: Post, b: Post): number {
 
 /**
  * Return up to `limit` related posts, ranked by tag similarity to `current`.
- * Excludes the current post and hidden posts.
+ * Excludes the current post, hidden posts, and drafts.
  */
 export function relatedPosts(current: Post, all: Post[], limit = 3): Post[] {
   return all
-    .filter((p) => p.id !== current.id && !p.data.hidden)
+    .filter((p) => p.id !== current.id && !p.data.hidden && !p.data.draft)
     .map((p) => ({ post: p, score: tagSimilarity(current, p) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || b.post.data.date.getTime() - a.post.data.date.getTime())

@@ -1,0 +1,25 @@
+import rss from '@astrojs/rss';
+import { site } from '@config/site';
+import type { APIContext } from 'astro';
+import { getCollection } from 'astro:content';
+
+export async function GET(context: APIContext) {
+  const posts = (await getCollection('posts'))
+    .filter((post) => !post.data.hidden && !post.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  return rss({
+    title: `${site.author.name} — ${site.blog.name}`,
+    description: site.blog.description,
+    site: context.site ?? site.url,
+    items: posts.map((post) => ({
+      title: post.data.title,
+      description: post.data.description ?? '',
+      pubDate: post.data.date,
+      link: `${site.base}/blog/${post.id}/`,
+      categories: [...post.data.tags, ...post.data.categories],
+      author: `${site.author.email} (${site.author.name})`,
+    })),
+    customData: `<language>${site.lang}</language>`,
+  });
+}

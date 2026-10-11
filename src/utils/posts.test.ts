@@ -13,6 +13,7 @@ function makePost(
     tags?: string[];
     categories?: string[];
     hidden?: boolean;
+    draft?: boolean;
     pinned?: boolean;
   } = {},
 ) {
@@ -24,6 +25,7 @@ function makePost(
       tags: opts.tags ?? [],
       categories: opts.categories ?? [],
       hidden: opts.hidden ?? false,
+      draft: opts.draft ?? false,
       pinned: opts.pinned ?? false,
     },
   } as any;
@@ -82,6 +84,14 @@ describe('relatedPosts', () => {
     const other = makePost('b', { tags: ['x'] });
     const result = relatedPosts(current, [current, other]);
     expect(result.every((p) => p.id !== 'a')).toBe(true);
+  });
+
+  it('excludes hidden posts and drafts even with matching tags', () => {
+    const current = makePost('current', { tags: ['x'] });
+    const published = makePost('published', { tags: ['x'] });
+    const hidden = makePost('hidden', { tags: ['x'], hidden: true });
+    const draft = makePost('draft', { tags: ['x'], draft: true });
+    expect(relatedPosts(current, [current, draft, hidden, published])).toEqual([published]);
   });
 
   it('returns posts sorted by tag overlap', () => {

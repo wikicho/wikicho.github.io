@@ -99,7 +99,7 @@ export const site = {
     /** Path to CV PDF in public/assets/pdf/ */
     cv_pdf: undefined as string | undefined,
     /** Show RSS icon in social links */
-    rss_icon: false,
+    rss_icon: true,
   },
 
   // ─── Navigation ────────────────────────────────────────────────────────────
@@ -119,6 +119,7 @@ export const site = {
     items: [
       { label: 'about', href: '/' },
       { label: 'publications', href: '/publications/' },
+      { label: 'blog', href: '/blog/' },
       { label: 'cv', href: '/cv/' },
     ] as NavItem[],
   },
@@ -162,15 +163,15 @@ export const site = {
 
   blog: {
     /** Name shown in the blog page heading. */
-    name: 'Wonsub Cho',
-    description: 'Notes on dark matter, cosmology, and the early universe.',
+    name: 'Blog',
+    description: 'Thoughts, stories, and things I want to remember.',
     /** Number of posts per page. */
     postsPerPage: 5,
     /**
      * Tags shown as badges on the blog listing page header.
      * Users can click them to filter posts by tag.
      */
-    displayTags: ['formatting', 'images', 'links', 'math', 'code', 'blockquotes'],
+    displayTags: ['life', 'thoughts', 'notes'],
     /** Categories shown as badges on the blog listing page header. */
     displayCategories: [] as string[],
     /**
@@ -291,6 +292,40 @@ export const site = {
     googleVerification: '' as string,
     /** Bing Webmaster verification ID. */
     bingVerification: '' as string,
+  },
+
+  // ─── Cookie consent ──────────────────────────────────────────────────────
+
+  cookieConsent: {
+    /** Language and dialog copy used when `features.cookieConsent` is enabled. */
+    language: 'en',
+    translation: {
+      consentModal: {
+        title: 'We use cookies',
+        description: 'This site uses cookies to improve your experience and analyze traffic.',
+        acceptAllBtn: 'Accept all',
+        acceptNecessaryBtn: 'Reject all',
+        showPreferencesBtn: 'Manage preferences',
+      },
+      preferencesModal: {
+        title: 'Cookie preferences',
+        acceptAllBtn: 'Accept all',
+        acceptNecessaryBtn: 'Reject all',
+        savePreferencesBtn: 'Save preferences',
+        sections: [
+          {
+            title: 'Necessary cookies',
+            description: 'Required for the site to function.',
+            linkedCategory: 'necessary',
+          },
+          {
+            title: 'Analytics cookies',
+            description: 'Help us understand how visitors interact with the site.',
+            linkedCategory: 'analytics',
+          },
+        ],
+      },
+    },
   },
 
   // ─── Open Graph ───────────────────────────────────────────────────────────

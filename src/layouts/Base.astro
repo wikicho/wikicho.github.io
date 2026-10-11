@@ -1,8 +1,10 @@
 ---
 import '@styles/global.css';
 
+import CookieConsent from '@components/CookieConsent.astro';
 import Footer from '@components/Footer.astro';
 import Navbar from '@components/Navbar.astro';
+import SearchTrigger from '@components/search/SearchTrigger.astro';
 import { site } from '@config/site';
 import { ClientRouter } from 'astro:transitions';
 
@@ -12,6 +14,8 @@ interface Props {
   /** OG preview image (absolute URL or path) */
   image?: string;
   noindex?: boolean;
+  /** Draft pages are excluded from Pagefind, including their metadata. */
+  draft?: boolean;
   /** Override the robots meta tag content string (e.g. 'noindex, nofollow'). */
   robots?: string;
   /** Whether this is the homepage — injects Person JSON-LD when true */
@@ -23,6 +27,7 @@ const {
   description = site.description,
   image = site.og.image || undefined,
   noindex = false,
+  draft = false,
   robots,
   isHome = false,
 } = Astro.props;
@@ -34,6 +39,9 @@ const resolvedImage = image?.startsWith('/')
   ? `${import.meta.env.BASE_URL}${image.slice(1)}`
   : image;
 const ogImage = resolvedImage ? new URL(resolvedImage, site.url).toString() : undefined;
+const analyticsCategory = site.features.cookieConsent ? 'analytics' : undefined;
+const analyticsType = site.features.cookieConsent ? 'text/plain' : undefined;
+const partytownType = site.features.cookieConsent ? 'text/plain' : 'text/partytown';
 
 // Theme color override — emit --user-* vars consumed by _colors.css ('auto' → palette default)
 const color = site.theme.color;
@@ -123,10 +131,20 @@ const personJsonLd = isHome ? JSON.stringify({
       import.meta.env.PROD && site.analytics.ga4 && (
         <>
           <script
-            type="text/partytown"
+            is:inline
+            transition:persist="analytics-ga4-loader"
+            type={partytownType}
+            data-category={analyticsCategory}
+            data-type="text/partytown"
             src={`https://www.googletagmanager.com/gtag/js?id=${site.analytics.ga4}`}
           />
-          <script type="text/partytown" define:vars={{ ga4: site.analytics.ga4 }}>
+          <script
+            transition:persist="analytics-ga4-init"
+            type={partytownType}
+            data-category={analyticsCategory}
+            data-type="text/partytown"
+            define:vars={{ ga4: site.analytics.ga4 }}
+          >
             window.dataLayer = window.dataLayer || [];
             function gtag() {
               dataLayer.push(arguments);
@@ -142,9 +160,23 @@ const personJsonLd = isHome ? JSON.stringify({
     {
       import.meta.env.PROD && site.analytics.cronitor && (
         <script
+          transition:persist="analytics-cronitor"
+          type={analyticsType}
+          data-category={analyticsCategory}
           define:vars={{ siteId: site.analytics.cronitor }}
           is:inline
-        >{`!function(p,a,t,h,w,n,k){p.cronitor||(p.cronitor=function(){(p.cronitor.q=p.cronitor.q||[]).push(arguments)}),h=a.getElementsByTagName("script")[0],(k=a.createElement("script")).setAttribute("async",!0),k.setAttribute("src","https://rum.cronitor.io/script.js"),k.setAttribute("data-site-id",siteId),h.parentNode.insertBefore(k,h)}(window,document);`}</script>
+        >
+          (() => {
+            window.cronitor = window.cronitor || function () {
+              (window.cronitor.q = window.cronitor.q || []).push(arguments);
+            };
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://rum.cronitor.io/script.js';
+            script.setAttribute('data-site-id', siteId);
+            document.head.appendChild(script);
+          })();
+        </script>
       )
     }
 
@@ -152,6 +184,10 @@ const personJsonLd = isHome ? JSON.stringify({
     {
       import.meta.env.PROD && site.analytics.pirsch && (
         <script
+          is:inline
+          transition:persist="analytics-pirsch"
+          type={analyticsType}
+          data-category={analyticsCategory}
           defer
           src="https://api.pirsch.io/pa.js"
           id="pianjs"
@@ -164,9 +200,20 @@ const personJsonLd = isHome ? JSON.stringify({
     {
       import.meta.env.PROD && site.analytics.openpanel && (
         <script
+          transition:persist="analytics-openpanel"
+          type={analyticsType}
+          data-category={analyticsCategory}
           define:vars={{ clientId: site.analytics.openpanel }}
           is:inline
-        >{`(function(w,d,s){var c=d.createElement(s);c.src="https://openpanel.dev/op1.js";c.defer=true;c.setAttribute("data-client-id",clientId);d.head.appendChild(c);})(window,document,"script");`}</script>
+        >
+          (() => {
+            const script = document.createElement('script');
+            script.src = 'https://openpanel.dev/op1.js';
+            script.defer = true;
+            script.setAttribute('data-client-id', clientId);
+            document.head.appendChild(script);
+          })();
+        </script>
       )
     }
 
@@ -208,6 +255,7 @@ const personJsonLd = isHome ? JSON.stringify({
     style="padding-top: var(--navbar-height);"
     data-footer-position={site.footer.position}
     data-tooltips={site.features.tooltips ? 'true' : undefined}
+    data-pagefind-ignore={draft ? 'all' : undefined}
   >
     <!-- Skip to main content (accessibility) -->
     <a
@@ -219,8 +267,9 @@ const personJsonLd = isHome ? JSON.stringify({
     </a>
 
     <Navbar />
+    {site.features.search && <SearchTrigger />}
 
-    <main id="main-content" class="flex-1" data-pagefind-body>
+    <main id="main-content" class="flex-1" data-pagefind-body={draft ? undefined : true}>
       <slot />
     </main>
 
@@ -229,56 +278,7 @@ const personJsonLd = isHome ? JSON.stringify({
 
     {site.footer.position !== 'hidden' && <Footer />}
 
-    <!-- Cookie consent (vanilla-cookieconsent via CDN) -->
-    {
-      site.features.cookieConsent && (
-        <>
-          <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.css"
-          />
-          <script
-            src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.umd.js"
-            defer
-          ></script>
-          <script is:inline>{`
-            window.addEventListener('load', function() {
-              if (typeof CookieConsent === 'undefined') return;
-              CookieConsent.run({
-                categories: {
-                  necessary: { enabled: true, readOnly: true },
-                  analytics: {}
-                },
-                language: {
-                  default: 'en',
-                  translations: {
-                    en: {
-                      consentModal: {
-                        title: 'We use cookies',
-                        description: 'This site uses cookies to improve your experience and analyze traffic.',
-                        acceptAllBtn: 'Accept all',
-                        acceptNecessaryBtn: 'Reject all',
-                        showPreferencesBtn: 'Manage preferences'
-                      },
-                      preferencesModal: {
-                        title: 'Cookie preferences',
-                        acceptAllBtn: 'Accept all',
-                        acceptNecessaryBtn: 'Reject all',
-                        savePreferencesBtn: 'Save preferences',
-                        sections: [
-                          { title: 'Necessary cookies', description: 'Required for the site to function.', linkedCategory: 'necessary' },
-                          { title: 'Analytics cookies', description: 'Help us understand how visitors interact with the site.', linkedCategory: 'analytics' }
-                        ]
-                      }
-                    }
-                  }
-                }
-              });
-            });
-          `}</script>
-        </>
-      )
-    }
+    {site.features.cookieConsent && <CookieConsent />}
 
     <!-- Back to top button -->
     <button id="back-to-top" aria-label="Back to top" title="Back to top">

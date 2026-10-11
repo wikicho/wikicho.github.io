@@ -17,6 +17,8 @@ interface Props {
 const { post, headings = [] } = Astro.props;
 const { title, description, date, tags = [], categories = [], robots, draft = false } = post.data;
 const effectiveRobots = draft ? 'noindex, nofollow' : robots;
+const showTOC =
+  post.data.toc && headings.some((heading) => heading.depth === 2 || heading.depth === 3);
 
 // Access distill-specific fields via type cast (added to schema in content.config.ts)
 const postData = post.data as typeof post.data & {
@@ -32,14 +34,14 @@ const authors = postData.distillAuthors ?? [];
 const rt = post.body ? calcReadingTime(post.body) : 1;
 ---
 
-<Base title={title} description={description} robots={effectiveRobots}>
+<Base title={title} description={description} robots={effectiveRobots} draft={draft}>
   {site.features.progressBar && <ReadingProgress />}
 
   <div class="distill-page-container py-8">
     <div class="mx-auto flex max-w-5xl gap-8 px-4">
       <!-- TOC sidebar (desktop only) -->
       {
-        headings.length > 0 && (
+        showTOC && (
           <aside class="hidden w-52 flex-shrink-0 lg:block">
             <TOC headings={headings} />
           </aside>
@@ -129,6 +131,7 @@ const rt = post.body ? calcReadingTime(post.body) : 1;
       pre.appendChild(btn);
     });
   }
+  addCopyButtons();
   document.addEventListener('astro:page-load', addCopyButtons);
 </script>
 

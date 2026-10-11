@@ -1,3 +1,5 @@
+import { loadEnvFile } from 'node:process';
+
 // Pinned to 7.2.0 (7.2.1 breaks Shiki in mdx blocks) — bump with astro.
 import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
@@ -9,6 +11,13 @@ import rehypeExternalLinks from 'rehype-external-links';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 import Icons from 'unplugin-icons/vite';
+
+// Astro evaluates its config before loading .env. Node preserves shell/CI overrides.
+try {
+  loadEnvFile();
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
 
 /**
  * Remark plugin: rewrite root-relative src/href inside raw HTML blocks in .md files.

@@ -51,6 +51,8 @@ source of truth for them.
 
 Copy `.env.example` to `.env`, then set:
 
+The configuration loads `.env` before resolving deployment URLs. Variables supplied by the shell or CI take precedence over the file.
+
 ```dotenv
 ASTRO_SITE=https://username.github.io
 ASTRO_BASE=
@@ -208,6 +210,10 @@ blog: {
 
 Posts in the listing are grouped by year automatically.
 
+Draft posts are available in the development server for preview, but production builds omit their pages, listings, related-post recommendations, feeds, and search results. Set `draft: false` and confirm the title and date before publishing. Tags and categories link to generated archives.
+
+The `toc` flag controls the sidebar in both regular and Distill posts. Reading progress, section highlighting, tabs, copy buttons, and widget initialization work on initial loads and after client-side navigation.
+
 ### MDX components available in posts
 
 ```mdx
@@ -237,6 +243,8 @@ Enable in frontmatter:
 | `img_comparison: true` | Image comparison slider |
 | `code_diff: true`      | Diff2Html               |
 | `gallery: true`        | PhotoSwipe gallery      |
+
+Typograms uses the bundled Apache-licensed renderer from [google/typograms](https://github.com/google/typograms). Add a `<script type="text/typogram">` block in the post body; the renderer runs on page load and after navigation.
 
 ---
 
@@ -367,7 +375,7 @@ yarn citations:update
 
 This calls the [OpenAlex API](https://openalex.org) (free, no auth) to fetch current counts for every paper that has both `doi` and `google_scholar_id` set. Results are written back to `citations.yml`.
 
-`citations.yml` is also refreshed automatically before every production build (`prebuild` hook) and by the weekly GitHub Actions workflow (`.github/workflows/update-citations.yml`). The workflow commits the updated file back to the repo if any counts changed.
+`yarn build` explicitly runs `yarn citations:update` before Astro and Pagefind, so citation refresh also runs with Yarn 4. The weekly GitHub Actions workflow (`.github/workflows/update-citations.yml`) refreshes the same file and commits it if any counts changed.
 
 ---
 
@@ -714,6 +722,8 @@ features: {
 ```
 
 The dialog uses [vanilla-cookieconsent](https://github.com/orestbida/cookieconsent) loaded from CDN. Users must accept before analytics scripts run.
+
+When cookie consent is enabled, configured analytics scripts remain inactive until the visitor accepts the analytics category. The cookie preferences button lets visitors change their choice. Withdrawing analytics consent clears GA cookies and reloads the page to stop active trackers. Customize the dialog and button text in `site.cookieConsent`.
 
 ---
 

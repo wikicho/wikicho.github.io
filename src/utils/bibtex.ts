@@ -29,6 +29,27 @@ function matchingBrace(src: string, from: number): number {
   return depth === 0 ? i - 1 : -1;
 }
 
+/** Remove line comments while preserving percent signs escaped by LaTeX. */
+function stripComments(src: string): string {
+  let cleaned = '';
+  let backslashes = 0;
+
+  for (let i = 0; i < src.length; i++) {
+    const char = src[i];
+    if (char === '%' && backslashes % 2 === 0) {
+      while (i < src.length && src[i] !== '\n' && src[i] !== '\r') i++;
+      if (i < src.length) cleaned += src[i];
+      backslashes = 0;
+      continue;
+    }
+
+    cleaned += char;
+    backslashes = char === '\\' ? backslashes + 1 : 0;
+  }
+
+  return cleaned;
+}
+
 /**
  * Parse a BibTeX string into an array of entries.
  * Comments (`% ...`) and `@string` / `@preamble` directives are ignored.
@@ -36,8 +57,7 @@ function matchingBrace(src: string, from: number): number {
 export function parseBibtex(src: string): BibEntry[] {
   const entries: BibEntry[] = [];
 
-  // Remove line comments
-  const cleaned = src.replace(/%[^\n]*/g, '');
+  const cleaned = stripComments(src);
 
   // Find all @type{ positions
   const entryPattern = /@(\w+)\s*\{/g;

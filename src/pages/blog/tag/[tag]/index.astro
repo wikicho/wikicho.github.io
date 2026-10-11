@@ -1,0 +1,52 @@
+---
+import PostCard from '@components/blog/PostCard.astro';
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts', (post) => !post.data.hidden && !post.data.draft);
+  const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
+  return tags.map((tag) => ({
+    // Astro expects decoded pathnames; retain escapes only for reserved URL delimiters.
+    params: { tag: decodeURI(encodeURIComponent(tag)) },
+    props: {
+      tag,
+      posts: allPosts
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<Page title={`Tag: ${tag}`} description={`Posts tagged ${tag}`}>
+  <p><a class="back-link" href={`${site.base}/blog/`}>&larr; All posts</a></p>
+  <h1>Posts tagged <span class="badge-abbr">{tag}</span></h1>
+  <ul class="post-list">
+    {
+      posts.map((post) => (
+        <li>
+          <PostCard post={post} />
+        </li>
+      ))
+    }
+  </ul>
+</Page>
+
+<style>
+  .back-link {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+  .post-list {
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .post-list li {
+    margin-bottom: 1.75rem;
+  }
+</style>

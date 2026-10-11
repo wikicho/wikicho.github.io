@@ -4,7 +4,17 @@ import { expect, test } from '@playwright/test';
 
 test('homepage loads with author name in title', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(/Albert Einstein/);
+  const authorName = await page
+    .locator('script[type="application/ld+json"]')
+    .evaluateAll((scripts) => {
+      const person = scripts
+        .map((script) => JSON.parse(script.textContent ?? '{}'))
+        .find((data) => data['@type'] === 'Person');
+      return person?.name;
+    });
+  expect(typeof authorName).toBe('string');
+  expect(authorName).not.toBe('');
+  expect(await page.title()).toContain(authorName);
   await expect(page.locator('main')).toBeVisible();
 });
 
@@ -20,10 +30,21 @@ test('publications page loads', async ({ page }) => {
   await expect(page).toHaveTitle(/publications/i);
 });
 
-test('projects page loads', async ({ page }) => {
-  await page.goto('/projects/');
-  await expect(page.locator('main')).toBeVisible();
-  await expect(page).toHaveTitle(/projects/i);
+test('configured navbar destinations load', async ({ page }) => {
+  await page.goto('/');
+  const destinations = await page
+    .locator('nav a[href]')
+    .evaluateAll((links) =>
+      [...new Set(links.map((link) => (link as HTMLAnchorElement).href))].filter(
+        (href) => new URL(href).origin === window.location.origin,
+      ),
+    );
+  expect(destinations.length).toBeGreaterThan(0);
+  for (const destination of destinations) {
+    const response = await page.goto(destination);
+    expect(response?.ok()).toBe(true);
+    await expect(page.locator('main')).toBeVisible();
+  }
 });
 
 test('cv page loads', async ({ page }) => {

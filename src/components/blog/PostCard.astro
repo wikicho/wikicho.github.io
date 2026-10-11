@@ -89,7 +89,7 @@ const year = d.getFullYear();
           {tags.map((tag) => (
             <>
               &nbsp;&middot;&nbsp;
-              <a href={`${site.base}/blog/tag/${tag}/`}>
+              <a href={`${site.base}/blog/tag/${encodeURIComponent(tag)}/`}>
                 <IconHashtag />
                 &nbsp;{tag}
               </a>
@@ -98,7 +98,7 @@ const year = d.getFullYear();
           {categories.map((cat) => (
             <>
               &nbsp;&middot;&nbsp;
-              <a href={`${site.base}/blog/category/${cat}/`}>
+              <a href={`${site.base}/blog/category/${encodeURIComponent(cat)}/`}>
                 <IconTag />
                 &nbsp;{cat}
               </a>
@@ -144,7 +144,7 @@ const year = d.getFullYear();
         {tags.map((tag) => (
           <>
             &nbsp;&middot;&nbsp;
-            <a href={`${site.base}/blog/tag/${tag}/`}>
+            <a href={`${site.base}/blog/tag/${encodeURIComponent(tag)}/`}>
               <IconHashtag />
               &nbsp;{tag}
             </a>
@@ -153,7 +153,7 @@ const year = d.getFullYear();
         {categories.map((cat) => (
           <>
             &nbsp;&middot;&nbsp;
-            <a href={`${site.base}/blog/category/${cat}/`}>
+            <a href={`${site.base}/blog/category/${encodeURIComponent(cat)}/`}>
               <IconTag />
               &nbsp;{cat}
             </a>

@@ -72,7 +72,7 @@ yarn format         # Prettier
 
 - `scripts/update-citations.ts` — fetches citation counts from the OpenAlex API (by DOI) and writes `src/data/citations.yml`
 - Run manually: `yarn citations:update`
-- Runs automatically as `prebuild` before every `yarn build`
+- Runs automatically as the first command in `yarn build`
 - GitHub Actions workflow (`.github/workflows/update-citations.yml`) also runs this weekly and commits the result
 
 ### Analytics

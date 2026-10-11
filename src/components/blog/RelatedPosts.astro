@@ -36,7 +36,10 @@ if (posts.length === 0) return;
                 <>
                   <span aria-hidden="true">&middot;</span>
                   {post.data.tags.map((tag) => (
-                    <a href={`${site.base}/blog/tag/${tag}/`} class="related-tag">
+                    <a
+                      href={`${site.base}/blog/tag/${encodeURIComponent(tag)}/`}
+                      class="related-tag"
+                    >
                       #{tag}
                     </a>
                   ))}

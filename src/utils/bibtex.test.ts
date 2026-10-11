@@ -54,6 +54,31 @@ describe('parseBibtex', () => {
     expect(entries[0].fields.title).toBe('Title');
   });
 
+  it('preserves escaped percent signs and removes later comments on the same line', () => {
+    const bib = String.raw`@article{efficiency,
+  abstract = {An efficiency of 50\% is possible}, % omit this comment
+  title = "A 50\% efficiency",
+  year = {2024},
+}`;
+    const entries = parseBibtex(bib);
+    expect(entries).toHaveLength(1);
+    expect(entries[0].fields.abstract).toBe(String.raw`An efficiency of 50\% is possible`);
+    expect(entries[0].fields.title).toBe(String.raw`A 50\% efficiency`);
+    expect(entries[0].fields.year).toBe('2024');
+  });
+
+  it('treats a percent sign after an even number of backslashes as a comment', () => {
+    const bib = String.raw`@article{key,
+  abstract = {First line\\% omit this comment
+Second line},
+  year = {2024},
+}`;
+    const entries = parseBibtex(bib);
+    expect(entries).toHaveLength(1);
+    expect(entries[0].fields.abstract).toBe('First line\\\\\nSecond line');
+    expect(entries[0].fields.year).toBe('2024');
+  });
+
   it('parses multiple entries', () => {
     const bib = `@article{key1,
   title = {First},

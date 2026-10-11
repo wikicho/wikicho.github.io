@@ -1,0 +1,140 @@
+---
+import PostCard from '@components/blog/PostCard.astro';
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
+import { getCollection } from 'astro:content';
+
+import IconHashtag from '~icons/fa-solid/hashtag';
+import IconRss from '~icons/fa-solid/rss';
+import IconTags from '~icons/fa-solid/tags';
+
+const posts = (await getCollection('posts'))
+  .filter((post) => !post.data.hidden && !post.data.draft)
+  .sort((a, b) => {
+    if (a.data.pinned !== b.data.pinned) return a.data.pinned ? -1 : 1;
+    return b.data.date.getTime() - a.data.date.getTime();
+  });
+
+const postsByYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  const yearPosts = postsByYear.get(year) ?? [];
+  yearPosts.push(post);
+  postsByYear.set(year, yearPosts);
+}
+const years = [...postsByYear.keys()].sort((a, b) => b - a);
+---
+
+<Page title="Blog" description={site.blog.description}>
+  <header class="blog-header">
+    <div>
+      <h1>{site.blog.name}</h1>
+      <p>{site.blog.description}</p>
+    </div>
+    <a class="rss-link" href={`${site.base}/rss.xml`} aria-label="Subscribe via RSS">
+      <IconRss /> RSS
+    </a>
+  </header>
+
+  <nav class="topic-nav" aria-label="Blog topics">
+    {
+      site.blog.displayTags.map((tag) => (
+        <a href={`${site.base}/blog/tag/${encodeURIComponent(tag)}/`}>
+          <IconHashtag /> {tag}
+        </a>
+      ))
+    }
+    <a href={`${site.base}/blog/tags/`}><IconTags /> all tags</a>
+  </nav>
+
+  {
+    posts.length === 0 ? (
+      <p class="empty-state">{site.blog.emptyMessage}</p>
+    ) : (
+      years.map((year) => (
+        <section class="year-section">
+          <h2>
+            <a href={`${site.base}/blog/year/${year}/`}>{year}</a>
+          </h2>
+          <ul class="post-list">
+            {postsByYear.get(year)!.map((post) => (
+              <li>
+                <PostCard post={post} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    )
+  }
+</Page>
+
+<style>
+  .blog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--global-divider-color);
+    padding-bottom: 1.25rem;
+  }
+  .blog-header h1 {
+    margin: 0 0 0.35rem;
+    font-size: 2rem;
+  }
+  .blog-header p {
+    margin: 0;
+    color: var(--global-text-color-light);
+  }
+  .rss-link,
+  .topic-nav a {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+  .rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+  .topic-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+    padding: 1rem 0 1.5rem;
+    font-size: 0.9rem;
+  }
+  .topic-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .year-section {
+    margin-top: 1.5rem;
+  }
+  .year-section h2 {
+    border-bottom: 1px solid var(--global-divider-color);
+    padding-bottom: 0.3rem;
+  }
+  .year-section h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .post-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .post-list li {
+    margin-bottom: 1.75rem;
+  }
+  .empty-state {
+    padding-top: 2rem;
+    color: var(--global-text-color-light);
+  }
+  @media (max-width: 640px) {
+    .blog-header {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -47,8 +47,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "prebuild": "node --strip-types scripts/update-citations.ts",
-    "build": "astro build --timings && pagefind --site dist",
+    "build": "yarn citations:update && astro build --timings && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",

@@ -62,7 +62,7 @@ function entryUrl(entry: BibEntry): string {
 
 function PublicationEntry({
   entry,
-  maxAuthorLimit = 3,
+  maxAuthorLimit,
   showThumbnails = true,
   authorLastName = '',
   previewDir = '/assets/img/publication_preview/',
@@ -448,7 +448,7 @@ function PublicationEntry({
 
 export function BibSearch({
   entries,
-  maxAuthorLimit = 3,
+  maxAuthorLimit,
   showThumbnails = true,
   authorLastName = '',
   previewDir = '/assets/img/publication_preview/',

@@ -1,0 +1,85 @@
+---
+import { site } from '@config/site';
+---
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.css"
+/>
+<div id="cookieconsent-root" transition:persist data-pagefind-ignore="all">
+  <button class="cookie-preferences" type="button" data-cc="show-preferencesModal">
+    {site.cookieConsent.translation.consentModal.showPreferencesBtn}
+  </button>
+</div>
+
+<script is:inline define:vars={{ consentSettings: site.cookieConsent }}>
+  (() => {
+    async function initializeConsent() {
+      const root = document.getElementById('cookieconsent-root');
+      if (!root || root.dataset.initialized || root.dataset.initializing) return;
+      root.dataset.initializing = 'true';
+      try {
+        window.CookieConsent ||=
+          await import('https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.esm.js');
+      } catch {
+        delete root.dataset.initializing;
+        return;
+      }
+      delete root.dataset.initializing;
+      root.dataset.initialized = 'true';
+
+      function notifyPartytown() {
+        if (!window.CookieConsent.acceptedCategory('analytics')) return;
+        // CookieConsent activates the inert scripts before this queued notification runs.
+        window.setTimeout(() => window.dispatchEvent(new CustomEvent('ptupdate')), 0);
+      }
+
+      window.CookieConsent.run({
+        root: '#cookieconsent-root',
+        mode: 'opt-in',
+        categories: {
+          necessary: { enabled: true, readOnly: true },
+          analytics: {
+            autoClear: {
+              cookies: [{ name: /^(_ga|_gid|_gat)/ }],
+            },
+          },
+        },
+        onConsent: notifyPartytown,
+        onChange: ({ changedCategories }) => {
+          if (!changedCategories.includes('analytics')) return;
+          if (window.CookieConsent.acceptedCategory('analytics')) {
+            notifyPartytown();
+          } else {
+            // Unload trackers and their workers/listeners; the saved rejection blocks them on reload.
+            window.location.reload();
+          }
+        },
+        language: {
+          default: consentSettings.language,
+          translations: { [consentSettings.language]: consentSettings.translation },
+        },
+      });
+    }
+
+    initializeConsent();
+    window.addEventListener('load', initializeConsent, { once: true });
+    document.addEventListener('astro:page-load', initializeConsent);
+  })();
+</script>
+
+<style>
+  .cookie-preferences {
+    position: fixed;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    z-index: 50;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--global-divider-color);
+    border-radius: 0.3rem;
+    background: var(--global-bg-color);
+    color: var(--global-text-color);
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+</style>

@@ -100,6 +100,8 @@ const allItems: SearchItem[] = [...posts, ...projects, ...teaching];
     if (!nk) return;
 
     const el = nk as HTMLElement;
+    if (el.dataset.searchInitialized) return;
+    el.dataset.searchInitialized = 'true';
     const navItems: RawItem[] = JSON.parse(el.dataset.navItems ?? '[]');
     const contentItems: RawItem[] = JSON.parse(el.dataset.contentItems ?? '[]');
     const pagefindBase = el.dataset.pagefindBase ?? '';
@@ -111,20 +113,14 @@ const allItems: SearchItem[] = [...posts, ...projects, ...teaching];
     nk.data = navData; // show nav items while idle
 
     // Open on search button click
-    document.querySelectorAll('#search-toggle').forEach((btn) => {
+    document.querySelectorAll('[data-search-toggle]').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         nk.open();
       });
     });
 
-    // ⌘K / Ctrl+K
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        nk.open();
-      }
-    });
+    // ninja-keys registers and cleans up its own ⌘K / Ctrl+K shortcut.
 
     // Pagefind — lazy-loaded on first search query
     let pagefind: any = null;

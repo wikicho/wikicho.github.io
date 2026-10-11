@@ -41,7 +41,7 @@ const isoDate = d.toISOString();
         <div class="flex flex-wrap gap-1">
           {categories.map((cat) => (
             <a
-              href={`${site.base}/blog/category/${cat}/`}
+              href={`${site.base}/blog/category/${encodeURIComponent(cat)}/`}
               class="badge-abbr text-xs"
               style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"
             >
@@ -60,7 +60,7 @@ const isoDate = d.toISOString();
         <div class="flex flex-wrap gap-1">
           {tags.map((tag) => (
             <a
-              href={`${site.base}/blog/tag/${tag}/`}
+              href={`${site.base}/blog/tag/${encodeURIComponent(tag)}/`}
               class="badge-abbr text-xs"
               style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"
             >

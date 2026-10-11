@@ -24,18 +24,32 @@
 </div>
 
 <script>
-  const bar = document.getElementById('reading-progress');
+  let controller: AbortController | null = null;
 
-  function update() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop / docHeight) * 100)) : 0;
-    if (bar) {
+  function initReadingProgress() {
+    controller?.abort();
+    controller = null;
+    const bar = document.getElementById('reading-progress');
+    if (!bar) return;
+
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const update = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct =
+        docHeight > 0 ? Math.max(0, Math.min(100, Math.round((scrollTop / docHeight) * 100))) : 0;
       bar.style.width = `${pct}%`;
       bar.setAttribute('aria-valuenow', String(pct));
-    }
+    };
+
+    window.addEventListener('scroll', update, { passive: true, signal });
+    window.addEventListener('resize', update, { signal });
+    update();
   }
 
-  window.addEventListener('scroll', update, { passive: true });
-  update();
+  initReadingProgress();
+  document.addEventListener('astro:page-load', initReadingProgress);
+  document.addEventListener('astro:before-swap', () => controller?.abort());
 </script>

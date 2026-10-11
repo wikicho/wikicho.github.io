@@ -7,6 +7,7 @@ import Newsletter from '@components/Newsletter.astro';
 import ReadingProgress from '@components/ReadingProgress.astro';
 import TOC from '@components/TOC.astro';
 import { site } from '@config/site';
+import { withBase } from '@utils/base';
 import { relatedPosts } from '@utils/posts';
 import { readingTime as calcReadingTime } from '@utils/reading-time';
 import type { MarkdownHeading } from 'astro';
@@ -30,6 +31,7 @@ const {
 } = post.data;
 
 const effectiveRobots = draft ? 'noindex, nofollow' : robots;
+const showTOC = post.data.toc && headings.some((heading) => heading.depth === 2 || heading.depth === 3);
 
 const lastmodFormatted = lastmod
   ? lastmod.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -44,10 +46,10 @@ const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
 // JSON-LD BlogPosting schema
 const canonicalURL = new URL(`${site.base}/blog/${post.id}/`, site.url).toString();
 
-// Generated OG image (falls back to static og.image if post has its own cover)
+// Use a post cover when provided, otherwise fall back to the site's social card.
 const ogImagePath = post.data.image
-  ? new URL(post.data.image, site.url).toString()
-  : new URL(`${site.base}/og/blog/${post.id}.png`, site.url).toString();
+  ? new URL(withBase(post.data.image), site.url).toString()
+  : new URL(withBase(site.og.image), site.url).toString();
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -66,7 +68,7 @@ const jsonLd = {
 };
 ---
 
-<Base title={title} description={description} robots={effectiveRobots} image={ogImagePath}>
+<Base title={title} description={description} robots={effectiveRobots} image={ogImagePath} draft={draft}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script
@@ -138,7 +140,7 @@ const jsonLd = {
     <div class="flex gap-8">
       <!-- TOC sidebar (desktop only) -->
       {
-        headings.length > 0 && (
+        showTOC && (
           <aside class="hidden lg:block w-52 flex-shrink-0">
             <TOC headings={headings} />
           </aside>
@@ -170,7 +172,7 @@ const jsonLd = {
         </header>
 
         <!-- Body -->
-        <div class="prose max-w-none" id="post-content">
+        <div class="prose max-w-none" id="post-content" data-mermaid={mermaid ? '' : undefined} data-gallery={gallery ? '' : undefined}>
           <slot />
         </div>
 
@@ -217,6 +219,7 @@ const jsonLd = {
       pre.appendChild(btn);
     });
   }
+  addCopyButtons();
   document.addEventListener('astro:page-load', addCopyButtons);
 </script>
 
@@ -278,30 +281,47 @@ const jsonLd = {
 
 {mermaid && (
   <>
-    {/* is:inline + dynamic import — see PhotoSwipe for why <script type="module">{...} doesn't work.
-        Astro renders mermaid code fences as <pre data-language="mermaid">, NOT pre.language-mermaid.
-        On each page-load (hard or View Transitions), destroy any previous instance and re-render. */}
+    {/* Initialize on a hard load and after navigation, with one listener and one render per article. */}
     <script is:inline>
-      document.addEventListener('astro:page-load', function () {
-        import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
-          .then(function (mod) {
-            var mermaid = mod.default;
-            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'default' });
+      (function () {
+        if (window.__asFolioMermaidInitialized) return;
+        window.__asFolioMermaidInitialized = true;
+        var generation = 0;
 
-            // Astro/Shiki renders ```mermaid fences as <pre data-language="mermaid">
-            document.querySelectorAll('pre[data-language="mermaid"]').forEach(function (pre) {
-              var code = pre.querySelector('code');
-              if (!code) return;
-              var div = document.createElement('div');
-              div.className = 'mermaid';
-              div.textContent = code.textContent || '';
-              pre.replaceWith(div);
+        function initMermaid() {
+          var content = document.querySelector('#post-content[data-mermaid]');
+          if (!content || content.dataset.mermaidInitialized) return;
+          content.dataset.mermaidInitialized = 'true';
+          var currentGeneration = generation;
+
+          import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
+            .then(function (mod) {
+              if (!content.isConnected || currentGeneration !== generation) return;
+              var mermaid = mod.default;
+              var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+              mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'default' });
+
+              content.querySelectorAll('pre[data-language="mermaid"]').forEach(function (pre) {
+                var code = pre.querySelector('code');
+                if (!code) return;
+                var div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = code.textContent || '';
+                pre.replaceWith(div);
+              });
+
+              return mermaid.run({ nodes: content.querySelectorAll('.mermaid:not([data-processed])') });
+            })
+            .catch(function (error) {
+              delete content.dataset.mermaidInitialized;
+              console.error('Mermaid diagram rendering failed.', error);
             });
+        }
 
-            mermaid.run();
-          });
-      });
+        initMermaid();
+        document.addEventListener('astro:page-load', initMermaid);
+        document.addEventListener('astro:before-swap', function () { generation += 1; });
+      })();
     </script>
   </>
 )}
@@ -463,25 +483,57 @@ const jsonLd = {
         JSX template literals as real ES modules, so static ESM import won't execute.
         Dynamic import() inside is:inline works correctly and survives View Transitions. */}
     <script is:inline>
-      document.addEventListener('astro:page-load', function () {
-        if (window.__pswpLightbox) {
-          window.__pswpLightbox.destroy();
+      (function () {
+        if (window.__asFolioGalleryInitialized) return;
+        window.__asFolioGalleryInitialized = true;
+        var gallery = null;
+        var loadingFor = null;
+        var generation = 0;
+
+        function cleanupGallery() {
+          generation += 1;
+          if (window.__pswpLightbox) window.__pswpLightbox.destroy();
           window.__pswpLightbox = null;
+          gallery = null;
+          loadingFor = null;
         }
-        if (!document.querySelector('#post-content a[data-pswp-width]')) return;
-        import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js')
-          .then(function (mod) {
-            var PhotoSwipeLightbox = mod.default;
-            window.__pswpLightbox = new PhotoSwipeLightbox({
-              gallery: '#post-content',
-              children: 'a[data-pswp-width]',
-              pswpModule: function () {
-                return import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js');
-              },
+
+        function initGallery() {
+          var content = document.querySelector('#post-content[data-gallery]');
+          if (!content || !content.querySelector('a[data-pswp-width]')) {
+            cleanupGallery();
+            return;
+          }
+          if (gallery === content || loadingFor === content) return;
+          cleanupGallery();
+          loadingFor = content;
+          var currentGeneration = generation;
+
+          import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js')
+            .then(function (mod) {
+              if (!content.isConnected || currentGeneration !== generation) return;
+              var PhotoSwipeLightbox = mod.default;
+              window.__pswpLightbox = new PhotoSwipeLightbox({
+                gallery: '#post-content[data-gallery]',
+                children: 'a[data-pswp-width]',
+                pswpModule: function () {
+                  return import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js');
+                },
+              });
+              window.__pswpLightbox.init();
+              gallery = content;
+              loadingFor = null;
+            })
+            .catch(function (error) {
+              if (currentGeneration === generation) loadingFor = null;
+              console.error('PhotoSwipe gallery initialization failed.', error);
             });
-            window.__pswpLightbox.init();
-          });
-      });
+        }
+
+        initGallery();
+        document.addEventListener('astro:page-load', initGallery);
+        document.addEventListener('astro:before-swap', cleanupGallery);
+      })();
     </script>
   </>
 )}

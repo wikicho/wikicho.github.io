@@ -41,37 +41,50 @@ if (tocHeadings.length === 0) return;
 </nav>
 
 <script>
-  // Highlight the active heading as user scrolls
-  const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
-  const headingIds = Array.from(links).map((l) => l.getAttribute('href')?.slice(1) ?? '');
+  let observer: IntersectionObserver | null = null;
 
-  function setActive(id: string) {
-    links.forEach((l) => {
-      const isActive = l.getAttribute('href') === `#${id}`;
-      l.style.color = isActive ? 'var(--global-theme-color)' : 'var(--global-text-color-light)';
-      l.style.fontWeight = isActive ? '600' : '400';
+  function initTOC() {
+    observer?.disconnect();
+    observer = null;
+    const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+    if (links.length === 0) return;
+    const headingIds = Array.from(links).map((link) => link.getAttribute('href')?.slice(1) ?? '');
+
+    function setActive(id: string) {
+      links.forEach((link) => {
+        const isActive = link.getAttribute('href') === `#${id}`;
+        link.style.color = isActive
+          ? 'var(--global-theme-color)'
+          : 'var(--global-text-color-light)';
+        link.style.fontWeight = isActive ? '600' : '400';
+      });
+    }
+
+    const navbarHeight =
+      parseInt(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) ||
+      57;
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+            break;
+          }
+        }
+      },
+      { rootMargin: `-${navbarHeight}px 0px -80% 0px`, threshold: 0 },
+    );
+
+    headingIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer?.observe(el);
     });
   }
 
-  const navbarHeight =
-    parseInt(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 57;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          setActive(entry.target.id);
-          break;
-        }
-      }
-    },
-    { rootMargin: `-${navbarHeight}px 0px -80% 0px`, threshold: 0 },
-  );
-
-  headingIds.forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) observer.observe(el);
-  });
+  initTOC();
+  document.addEventListener('astro:page-load', initTOC);
+  document.addEventListener('astro:before-swap', () => observer?.disconnect());
 </script>
 
 <style>
