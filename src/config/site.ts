@@ -51,7 +51,7 @@ export const site = {
     email: 'wikicho1674@gmail.com',
 
     /** Path to profile photo. Place image in public/assets/img/. */
-    avatar: '/assets/img/prof_pic.jpg',
+    avatar: '/assets/img/20260523_130001.jpg',
 
     /**
      * Subtitle below your name on the about page.
