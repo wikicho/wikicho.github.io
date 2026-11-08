@@ -464,6 +464,26 @@ cv: {
 
 ---
 
+### Additional CV sections and display dates
+
+For the RenderCV format, add custom section arrays (for example `teaching` or `talks`)
+under `cv.sections` in `src/data/cv.yml`, then list their keys and headings in
+`site.cv.additionalSections`. An empty array disables these extra sections. Entries
+use `title`, `institution` (or `company`), `date`, `highlights`, and an optional `url`.
+
+Use the optional `date_label` string on education, experience, awards, or custom
+entries to preserve wording such as expected completion, academic terms, and
+non-consecutive years. Otherwise, the standard dates are formatted automatically.
+`site.cv.labels` controls the research experience, publications, awards, skills,
+and interests headings. `site.cv.pdfPath` accepts either a local path or an external
+PDF URL; this site's PDF points to the original in `wikicho/cv`.
+
+The current `src/data/cv.yml` is a snapshot of the CV repository's README. Update
+that snapshot when the source changes; only the external PDF link follows the
+latest version automatically.
+
+---
+
 ## 9. Books
 
 Create `.md` files in `src/content/books/`:

@@ -153,8 +153,21 @@ export const site = {
      * 'jsonresume' → reads src/data/resume.json (JSONResume format)
      */
     format: 'rendercv' as 'rendercv' | 'jsonresume',
-    /** Path to CV PDF for the download button in public/assets/pdf/. */
-    pdfPath: '' as string,
+    /** Local path or external URL to the CV PDF used by the download button. */
+    pdfPath: 'https://raw.githubusercontent.com/wikicho/cv/main/Wonsub_Cho_CV.pdf' as string,
+    /** Section headings used by the RenderCV page and its navigation. */
+    labels: {
+      experience: 'Visiting Research Experience',
+      publications: 'Publications',
+      awards: 'Awards and Fellowships',
+      skills: 'Skills and Languages',
+      interests: 'Research Interests',
+    },
+    /** Additional RenderCV sections to display; use an empty array to hide them. */
+    additionalSections: [
+      { key: 'teaching', title: 'Teaching Experience' },
+      { key: 'talks', title: 'Talks and Posters' },
+    ] as Array<{ key: string; title: string }>,
   },
 
   // ─── Blog ──────────────────────────────────────────────────────────────────

@@ -18,6 +18,8 @@ export interface RenderCVEntry {
   authors?: string[];
   doi?: string;
   date?: string | number;
+  /** Literal display date for expected completion, academic terms, or non-consecutive years. */
+  date_label?: string;
   start_date?: string | number;
   end_date?: string | number | 'present';
   location?: string;

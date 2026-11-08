@@ -34,3 +34,13 @@ const imgClass = circular ? 'img-fluid z-depth-1 rounded-circle' : 'img-fluid z-
   />
   {site.author.moreInfo && <div class="more-info" set:html={site.author.moreInfo} />}
 </div>
+
+<style>
+  @media (max-width: 575px) {
+    .profile {
+      float: none;
+      width: min(200px, 100%);
+      margin: 0 auto 1.5rem;
+    }
+  }
+</style>

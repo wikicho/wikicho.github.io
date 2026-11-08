@@ -1,46 +1,249 @@
-# RenderCV YAML format — https://docs.rendercv.com/
-# Used by the CV page when site.cv.format is 'rendercv'.
+# RenderCV data synchronized from https://github.com/wikicho/cv/blob/main/README.md
+# The source CV retains expected graduation/visit dates and scheduled presentations.
 
 cv:
-  name: Wonsub Cho
-  location: Suwon, Republic of Korea
-  email: wikicho1674@gmail.com
-  website: https://wikicho.github.io
-  summary: Ph.D. student in theoretical physics studying particle dark matter, cosmology, and the early universe.
+  name: 'Wonsub Cho'
+  location: 'Suwon, Republic of Korea'
+  email: 'wikicho1674@gmail.com'
+  website: 'https://wikicho.github.io'
   social_networks:
-    - network: GitHub
-      username: wikicho
-
+    - network: 'GitHub'
+      username: 'wikicho'
+    - network: 'INSPIRE'
+      username: '1821880'
   sections:
     education:
-      - institution: Sungkyunkwan University
-        area: Physics
-        degree: Ph.D.
-        start_date: 2023-03
-        end_date: present
-
-      - institution: Sungkyunkwan University
-        area: Physics
-        degree: M.S.
-        start_date: 2020-08
-        end_date: 2022-08
+      - institution: 'Sungkyunkwan University (SKKU)'
+        area: 'Physics'
+        degree: 'Ph.D. Candidate'
+        start_date: '2023-03'
+        end_date: '2027-02'
+        date_label: 'Mar 2023 – Feb 2027 (expected)'
         highlights:
-          - 'Thesis: Effect of boosted dark matter by cosmic particles'
-
+          - 'Theoretical Astroparticle Physics and Cosmology Group'
+          - 'Advisor: Prof. Ki-Young Choi'
+      - institution: 'Sungkyunkwan University (SKKU)'
+        area: 'Physics'
+        degree: 'M.S.'
+        start_date: '2020-08'
+        end_date: '2022-08'
+        highlights:
+          - 'Thesis: Effect of Boosted Dark Matter by Cosmic Particles'
+      - institution: 'Sungkyunkwan University (SKKU)'
+        area: 'Physics'
+        degree: 'B.S.'
+        start_date: '2014-03'
+        end_date: '2020-02'
+        highlights:
+          - 'Thesis: Searching for Boosted Dark Matter by High-Energy Neutrinos'
     experience:
-      - company: ASML Korea
-        position: Metrology/Sensor Engineer
-        start_date: 2022-07
-        end_date: 2022-10
-
+      - company: 'CERN Theory Department'
+        position: 'Visiting Student'
+        start_date: '2026-05'
+        end_date: 'present'
+        date_label: 'May 2026 – Present (expected end: Nov 2026)'
+        highlights:
+          - 'Advisor: Jorinde van de Vis'
+          - 'Research: Deviations from kinetic equilibrium in electroweak baryogenesis.'
+          - 'Selected through the CERN–Korea Collaboration (CKC) graduate student programme.'
+    publications:
+      - title: 'Stable dark matter from Pauli blocking in the degenerate fermion background with quantum field theory'
+        authors:
+          - 'Wonsub Cho'
+          - 'Ki-Young Choi'
+          - 'Junghoon Joh'
+          - 'Osamu Seto'
+        journal: 'Physics of the Dark Universe 49 (2025) 101978'
+        date: '2025'
+        doi: '10.1016/j.dark.2025.101978'
+      - title: 'Reconciling cosmological tensions with inelastic dark matter and dark radiation in a U(1)_D framework'
+        authors:
+          - 'Wonsub Cho'
+          - 'Ki-Young Choi'
+          - 'Satyabrata Mahapatra'
+        journal: 'Journal of Cosmology and Astroparticle Physics 09 (2024) 065'
+        date: '2024'
+        doi: '10.1088/1475-7516/2024/09/065'
+      - title: 'Cored dark matter halos in the cosmic neutrino background'
+        authors:
+          - 'Wonsub Cho'
+          - 'Ki-Young Choi'
+          - 'Hee Jung Kim'
+        journal: 'Journal of Cosmology and Astroparticle Physics 07 (2023) 013'
+        date: '2023'
+        doi: '10.1088/1475-7516/2023/07/013'
+      - title: 'Sterile neutrino dark matter with dipole interaction'
+        authors:
+          - 'Wonsub Cho'
+          - 'Ki-Young Choi'
+          - 'Osamu Seto'
+        journal: 'Physical Review D 105 (2022) 015016'
+        date: '2022'
+        doi: '10.1103/PhysRevD.105.015016'
+      - title: 'Searching for boosted dark matter mediated by a new gauge boson'
+        authors:
+          - 'Wonsub Cho'
+          - 'Ki-Young Choi'
+          - 'Seong Moon Yoo'
+        journal: 'Physical Review D 102 (2020) 095010'
+        date: '2020'
+        doi: '10.1103/PhysRevD.102.095010'
+    awards:
+      - name: 'CERN–Korea Collaboration (CKC) Graduate Student Programme'
+        date_label: '2026'
+        highlights:
+          - 'selected for a research visit to CERN with support for living expenses and airfare'
+      - name: 'Encouragement Award for Graduate Research Presentation'
+        date_label: '2025'
+        highlights:
+          - 'SKKU Physics Workshop'
+      - name: 'Outstanding Presentation Award'
+        date_label: '2020, 2023, 2025'
+        highlights:
+          - 'Korean Physical Society'
+      - name: 'Graduate Merit Scholarship'
+        date_label: '2020–2024'
+        highlights:
+          - 'Department of Physics, SKKU'
+      - name: 'BK21 Innovation Research Fellowship'
+        date_label: '2021–2022'
+      - name: 'Excellence Award for Undergraduate Poster Presentation'
+        date_label: '2019'
+        highlights:
+          - 'Korean Physical Society'
+      - name: 'National Science and Technology Scholarship'
+        date_label: '2018'
+        highlights:
+          - 'Korea Student Aid Foundation'
+    teaching:
+      - title: 'Quantum Field Theory I and II'
+        institution: 'Sungkyunkwan University (SKKU)'
+        date_label: '2025–2026'
+        highlights:
+          - 'Teaching Assistant'
+      - title: 'Electromagnetism'
+        institution: 'Sungkyunkwan University (SKKU)'
+        date_label: 'Fall 2024'
+        highlights:
+          - 'Teaching Assistant'
+      - title: 'Relativity'
+        institution: 'Sungkyunkwan University (SKKU)'
+        date_label: 'Fall 2023'
+        highlights:
+          - 'Teaching Assistant'
+      - title: 'Particle Physics Summer Camp'
+        institution: 'KIAS'
+        date_label: '2023'
+        highlights:
+          - 'Teaching Assistant'
+      - title: 'General Physics'
+        institution: 'Sungkyunkwan University (SKKU)'
+        date_label: '2020, 2023'
+        highlights:
+          - 'Teaching Assistant'
+      - title: 'Mathematical Physics'
+        institution: 'Sungkyunkwan University (SKKU)'
+        date_label: '2020–2022'
+        highlights:
+          - 'Teaching Assistant'
+    talks:
+      - title: 'Nanohertz gravitational waves and asymmetric dark matter from a supercooled dark sector phase transition'
+        institution: 'PT@Geneva'
+        date_label: 'Nov 2026'
+        highlights:
+          - 'Talk (scheduled)'
+      - title: 'Nanohertz gravitational waves and dark matter from a classically conformal dark sector'
+        institution: 'DESY Theory Workshop 2026'
+        date_label: 'Sep 2026'
+        highlights:
+          - 'Talk'
+      - title: 'Reconciling cosmological tensions with inelastic dark matter and radiation in a U(1)_D framework'
+        institution: 'IBS Dark Matter Axion Group Seminar'
+        date_label: 'Dec 2025'
+        highlights:
+          - 'Talk'
+      - title: 'Reconciling cosmological tensions with inelastic dark matter and dark radiation in a U(1)_D framework'
+        institution: 'SKKU Physics Workshop'
+        date_label: 'Nov 2025'
+        highlights:
+          - 'Poster'
+      - title: 'Reconciling cosmological tensions with inelastic dark matter and dark radiation'
+        institution: '29th International Summer Institute on Phenomenology of Elementary Particle Physics and Cosmology (SI 2025)'
+        date_label: 'Aug 2025'
+        highlights:
+          - 'Poster'
+      - title: 'Reconciling cosmological tensions with inelastic dark matter and dark radiation in a U(1)_D framework'
+        institution: '7th CUBES Workshop'
+        date_label: 'Apr 2025'
+        highlights:
+          - 'Talk'
+      - title: 'Reconciling cosmological tensions with inelastic dark matter and dark radiation'
+        institution: 'Spring Meeting of the Korean Physical Society'
+        date_label: 'Apr 2025'
+        highlights:
+          - 'Talk'
+      - title: 'Freeze-in inelastic Dirac dark matter and H₀ tension'
+        institution: 'IBS CTPU-CGA 2024 Summer School and Workshop for Particle Physics and Cosmology in Korea'
+        date_label: 'Jul 2024'
+        highlights:
+          - 'Talk'
+      - title: 'Freeze-in inelastic dark matter, H₀ tension and detection prospects'
+        institution: '6th CUBES Workshop'
+        date_label: 'Apr 2024'
+        highlights:
+          - 'Talk'
+      - title: 'Inelastic dark matter, the H₀ tension, and detection prospects'
+        institution: 'Spring Meeting of the Korean Physical Society'
+        date_label: 'Apr 2024'
+        highlights:
+          - 'Talk'
+      - title: 'Cored dark matter halos in the cosmic neutrino background'
+        institution: 'IBS CTPU-CGA 2023 Summer Workshop and School on Particle Physics in Korea'
+        date_label: 'Jul 2023'
+        highlights:
+          - 'Talk'
+      - title: 'Cored dark matter halos in the cosmic neutrino background'
+        institution: 'XVI International Conference on Interconnections between Particle Physics and Cosmology (PPC 2023)'
+        date_label: 'Jun 2023'
+        highlights:
+          - 'Talk'
+      - title: 'Cored dark halo in the cosmic neutrino background'
+        institution: '5th CUBES Workshop'
+        date_label: 'Apr 2023'
+        highlights:
+          - 'Talk'
+      - title: 'Cored dark matter halos in the cosmic neutrino background'
+        institution: 'Spring Meeting of the Korean Physical Society'
+        date_label: 'Apr 2023'
+        highlights:
+          - 'Talk'
+      - title: 'Sterile neutrino dark matter with dipole interaction'
+        institution: 'The Origin and Evolution of the Universe (APCTP)'
+        date_label: 'Nov 2021'
+        highlights:
+          - 'Talk'
+      - title: 'Sterile neutrino dark matter with dipole interaction'
+        institution: 'Fall Meeting of the Korean Physical Society'
+        date_label: 'Oct 2021'
+        highlights:
+          - 'Talk'
+      - title: 'Searching for boosted dark matter mediated by a new gauge boson'
+        institution: 'Fall Meeting of the Korean Physical Society'
+        date_label: 'Nov 2020'
+        highlights:
+          - 'Talk'
+      - title: 'Searching for boosted dark matter by cosmic rays'
+        institution: 'Fall Meeting of the Korean Physical Society'
+        date_label: 'Oct 2019'
+        highlights:
+          - 'Poster'
     skills:
-      - label: Programming
-        details: C/C++, Python
-      - label: Scientific computing
-        details: Mathematica
-
+      - label: 'Scientific computing'
+        details: 'Python, Mathematica'
+      - label: 'Languages'
+        details: 'Korean and English'
     interests:
-      - label: Dark Matter
-        details: Relic density, sterile-neutrino dark matter, boosted dark matter
-      - label: Early Universe
-        details: First-order phase transitions, baryogenesis, inflation
+      - label: 'Dark matter'
+        details: 'Dark matter in cosmology and particle physics'
+      - label: 'Early universe'
+        details: 'Cosmological phase transitions, gravitational waves, and baryogenesis'
