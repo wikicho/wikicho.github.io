@@ -4,7 +4,7 @@ interface Props {
   title: string;
   /** Secondary line (institution, company, journal). */
   subtitle?: string;
-  /** Location string — shown below date badge. */
+  /** Location string — shown below the date. */
   location?: string;
   /** Date range or single date string (already formatted). */
   dates?: string;
@@ -24,16 +24,7 @@ const { title, subtitle, location, dates, highlights = [], url } = Astro.props;
         <tbody>
           <tr>
             <td>
-              {
-                dates && (
-                  <span
-                    class="badge font-weight-bold danger-color-dark text-uppercase align-middle"
-                    style="min-width: 75px;"
-                  >
-                    {dates}
-                  </span>
-                )
-              }
+              {dates && <span class="entry-date">{dates}</span>}
             </td>
           </tr>
           {
@@ -96,10 +87,11 @@ const { title, subtitle, location, dates, highlights = [], url } = Astro.props;
     text-align: left;
     overflow-wrap: anywhere;
   }
-  .badge {
-    white-space: normal;
+  .entry-date {
+    display: inline-block;
+    color: var(--global-text-color-light);
+    font-size: 0.8125rem;
     line-height: 1.5;
-    text-transform: none;
   }
   .location {
     white-space: normal;
