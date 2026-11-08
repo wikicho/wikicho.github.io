@@ -8,9 +8,12 @@ import { getAuthors, getBoolField, getTitle, getVenue, getYear, parseBibtex } fr
 import AboutContent from '../data/about.mdx';
 import bibRaw from '../data/papers.bib?raw';
 
-// Selected publications
+// Home publications, newest first regardless of BibTeX file order.
 const selectedPapers = site.selectedPapers.enabled
-  ? parseBibtex(bibRaw).filter((e) => getBoolField(e, 'selected'))
+  ? parseBibtex(bibRaw)
+      .filter((entry) => site.selectedPapers.mode === 'recent' || getBoolField(entry, 'selected'))
+      .sort((a, b) => Number(getYear(b)) - Number(getYear(a)))
+      .slice(0, site.selectedPapers.limit)
   : [];
 ---
 
@@ -62,7 +65,7 @@ const selectedPapers = site.selectedPapers.enabled
           <section class="mt-8">
             <h2 style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.3rem;">
               <a href={`${site.base}/publications/`} style="color: inherit; text-decoration: none;">
-                recent publications
+                {site.selectedPapers.heading}
               </a>
             </h2>
             <ol class="m-0 list-none p-0">
@@ -71,14 +74,11 @@ const selectedPapers = site.selectedPapers.enabled
                 const authors = getAuthors(entry);
                 const venue = getVenue(entry);
                 const year = getYear(entry);
-                const abbr = entry.fields.abbr;
                 const url =
                   entry.fields.html ??
                   (entry.fields.doi ? `https://doi.org/${entry.fields.doi}` : '');
-                const award = entry.fields.award;
                 return (
                   <li class="mb-4 text-sm" style="line-height: 1.6;">
-                    {abbr && <span class="badge-abbr mr-2">{abbr}</span>}
                     {url ? (
                       <a
                         href={url}
@@ -103,11 +103,6 @@ const selectedPapers = site.selectedPapers.enabled
                         </em>
                       </>
                     )}
-                    {award && (
-                      <span class="badge-abbr ml-2" style="background-color: #f59e0b;">
-                        {entry.fields.award_name ?? '🏆'}
-                      </span>
-                    )}
                   </li>
                 );
               })}
@@ -117,7 +112,7 @@ const selectedPapers = site.selectedPapers.enabled
                 href={`${site.base}/publications/`}
                 style="color: var(--global-theme-color); text-decoration: none;"
               >
-                Full publication list &rarr;
+                {site.selectedPapers.allLabel} &rarr;
               </a>
             </p>
           </section>
@@ -141,5 +136,11 @@ const selectedPapers = site.selectedPapers.enabled
   .desc {
     font-size: 1rem;
     margin-bottom: 1rem;
+  }
+  .social {
+    text-align: left;
+  }
+  .social .contact-icons {
+    font-size: 1.5rem;
   }
 </style>

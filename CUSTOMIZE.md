@@ -157,11 +157,15 @@ socials: {
 
 ## 5. About page content
 
-Edit `src/pages/index.astro` to change the bio text. The About page auto-pulls from:
+Edit `src/data/about.mdx` to change the bio text. The About page auto-pulls from:
 
 - **Announcements**: up to `site.announcements.limit` items from `src/content/announcements/`
 - **Latest posts**: up to `site.latestPosts.limit` posts from `src/content/posts/`
-- **Selected papers**: entries with `selected = {true}` in `src/data/papers.bib`
+- **Publications**: the newest two papers from `src/data/papers.bib` by default. Set
+  `site.selectedPapers.mode` to `'selected'` to include only entries with `selected = {true}`.
+  Papers are sorted by year, newest first; entries in the same year retain their BibTeX order.
+  Set `site.selectedPapers.limit` to change the count (`undefined` shows all).
+  Customize the section text with `heading` and `allLabel` in the same config block.
 
 All three sections can be disabled in `site.ts`.
 
@@ -203,12 +207,13 @@ Control reading-speed estimate and the empty-state message:
 
 ```typescript
 blog: {
+  compactList: true,                // title, date, and description without topic navigation or year groups
   wordsPerMinute: 200,              // used to calculate estimated reading time
   emptyMessage: 'No posts yet. Check back soon!',
 },
 ```
 
-Posts in the listing are grouped by year automatically.
+Set `site.blog.compactList` to `false` to restore topic navigation, year groups, and full post cards.
 
 Draft posts are available in the development server for preview, but production builds omit their pages, listings, related-post recommendations, feeds, and search results. Set `draft: false` and confirm the title and date before publishing. Tags and categories link to generated archives.
 

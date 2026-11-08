@@ -65,9 +65,7 @@ export const site = {
      * Address block below profile photo.
      * HTML is supported.
      */
-    moreInfo: `<p>Department of Physics</p>
-      <p>Sungkyunkwan University</p>
-      <p>Suwon, Republic of Korea</p>`,
+    moreInfo: '',
   },
 
   // ─── Social links ──────────────────────────────────────────────────────────
@@ -99,7 +97,7 @@ export const site = {
     /** Path to CV PDF in public/assets/pdf/ */
     cv_pdf: undefined as string | undefined,
     /** Show RSS icon in social links */
-    rss_icon: true,
+    rss_icon: false,
   },
 
   // ─── Navigation ────────────────────────────────────────────────────────────
@@ -143,7 +141,7 @@ export const site = {
      * 'normal'  — sits at the natural bottom of page content (only visible when scrolled down)
      * 'hidden'  — footer is not rendered at all
      */
-    position: 'sticky' as 'sticky' | 'normal' | 'hidden',
+    position: 'normal' as 'sticky' | 'normal' | 'hidden',
   },
 
   // ─── CV page ───────────────────────────────────────────────────────────────
@@ -167,6 +165,8 @@ export const site = {
     description: 'Thoughts, stories, and things I want to remember.',
     /** Number of posts per page. */
     postsPerPage: 5,
+    /** Show a simple title/date/description list without topic navigation or year groups. */
+    compactList: true,
     /**
      * Tags shown as badges on the blog listing page header.
      * Users can click them to filter posts by tag.
@@ -210,8 +210,16 @@ export const site = {
   },
 
   selectedPapers: {
-    /** Show selected publications section on the about page. */
+    /** Show the publications section on the about page. */
     enabled: true,
+    /** Use all papers sorted newest first, or only BibTeX entries marked selected. */
+    mode: 'recent' as 'recent' | 'selected',
+    /** Maximum number of papers on the about page; undefined shows all matching papers. */
+    limit: 2 as number | undefined,
+    /** Heading for the about-page publication section. */
+    heading: 'recent publications',
+    /** Link text leading to the complete publication list. */
+    allLabel: 'All publications',
   },
 
   // ─── Features ─────────────────────────────────────────────────────────────

@@ -36,20 +36,44 @@ const years = [...postsByYear.keys()].sort((a, b) => b - a);
     </a>
   </header>
 
-  <nav class="topic-nav" aria-label="Blog topics">
-    {
-      site.blog.displayTags.map((tag) => (
-        <a href={`${site.base}/blog/tag/${encodeURIComponent(tag)}/`}>
-          <IconHashtag /> {tag}
+  {
+    !site.blog.compactList && (
+      <nav class="topic-nav" aria-label="Blog topics">
+        {site.blog.displayTags.map((tag) => (
+          <a href={`${site.base}/blog/tag/${encodeURIComponent(tag)}/`}>
+            <IconHashtag /> {tag}
+          </a>
+        ))}
+        <a href={`${site.base}/blog/tags/`}>
+          <IconTags /> all tags
         </a>
-      ))
-    }
-    <a href={`${site.base}/blog/tags/`}><IconTags /> all tags</a>
-  </nav>
+      </nav>
+    )
+  }
 
   {
     posts.length === 0 ? (
       <p class="empty-state">{site.blog.emptyMessage}</p>
+    ) : site.blog.compactList ? (
+      <ul class="post-list compact-list">
+        {posts.map((post) => (
+          <li>
+            <article>
+              <h2>
+                <a href={`${site.base}/blog/${post.id}/`}>{post.data.title}</a>
+              </h2>
+              <time datetime={post.data.date.toISOString()}>
+                {post.data.date.toLocaleDateString(site.lang, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+              {post.data.description && <p>{post.data.description}</p>}
+            </article>
+          </li>
+        ))}
+      </ul>
     ) : (
       years.map((year) => (
         <section class="year-section">
@@ -127,6 +151,27 @@ const years = [...postsByYear.keys()].sort((a, b) => b - a);
   }
   .post-list li {
     margin-bottom: 1.75rem;
+  }
+  .compact-list {
+    margin-top: 2rem;
+  }
+  .compact-list h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.25rem;
+  }
+  .compact-list h2 a {
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+  .compact-list h2 a:hover {
+    color: var(--global-theme-color);
+  }
+  .compact-list time {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+  }
+  .compact-list p {
+    margin: 0.5rem 0 0;
   }
   .empty-state {
     padding-top: 2rem;
