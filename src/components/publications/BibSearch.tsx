@@ -157,10 +157,10 @@ function PublicationEntry({
   return (
     <li>
       <div className="row">
-        {/* Left column: abbr badge + thumbnail */}
+        {/* Left column: journal abbreviation + thumbnail */}
         {showThumbnails && (abbr || preview) && (
           <div className="col col-sm-2 abbr">
-            {abbr && <abbr className="badge w-100 rounded">{abbr}</abbr>}
+            {abbr && <abbr>{abbr}</abbr>}
             {preview && (
               <img
                 className="preview z-depth-1 rounded"

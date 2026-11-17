@@ -42,13 +42,13 @@ const { title, subtitle, location, dates, highlights = [], url } = Astro.props;
     <div class="col-xs-10 col-sm-10 col-md-10 mt-md-0 mt-2">
       {
         url ? (
-          <h6 class="title font-weight-bold ml-md-4 ml-1">
+          <h6 class="title ml-md-4 ml-1">
             <a href={url} target="_blank" rel="noopener noreferrer">
               {title}
             </a>
           </h6>
         ) : (
-          <h6 class="title font-weight-bold ml-md-4 ml-1">{title}</h6>
+          <h6 class="title ml-md-4 ml-1">{title}</h6>
         )
       }
       {

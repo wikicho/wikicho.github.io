@@ -826,19 +826,10 @@
   }
   .publications ol.bibliography li .abbr abbr {
     display: inline-block;
-    background-color: var(--global-theme-color);
     margin-bottom: 0.5rem;
-    color: var(--global-card-bg-color) !important;
-    padding: 0.2em 0.6em;
-    border-radius: 3px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-  }
-  .publications ol.bibliography li .abbr abbr a {
-    color: white;
-    text-decoration: none;
+    color: var(--global-text-color-light);
+    font-size: 0.8125rem;
+    font-weight: 400;
   }
   .publications ol.bibliography li .preview {
     width: 100%;
@@ -846,7 +837,7 @@
     display: block;
   }
   .publications ol.bibliography li .title {
-    font-weight: 700;
+    font-weight: 400;
     color: var(--global-text-color);
   }
   .publications ol.bibliography li .author {
@@ -1114,6 +1105,20 @@
     background: var(--global-theme-color);
     color: #fff;
   }
+}
+
+/* Keep publication links neutral alongside the unlayered base link styles. */
+.publications ol.bibliography li .title a,
+.cv #publications + .card .title,
+.cv #publications + .card .title a {
+  color: var(--global-text-color);
+  font-weight: 400;
+}
+
+.publications ol.bibliography li .title a:hover,
+.cv #publications + .card .title a:hover {
+  color: var(--global-text-color);
+  text-decoration: underline;
 }
 
 /* ─── Prose (Markdown body) ──────────────────────────────────────────────── */
