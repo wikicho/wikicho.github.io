@@ -347,12 +347,13 @@ publications: {
 
 ### Publication action links
 
-Set `site.publications.links` to control the publication-list buttons:
-`html`, `pdf`, and `details` are disabled on this site; `inspirehep` is enabled.
-INSPIRE buttons link to each paper's `inspirehep_id` in `papers.bib`, and their text
+Set `site.publications.links` to control the publication-list actions:
+`bibtex`, `html`, `pdf`, and `details` are disabled on this site; `inspirehep` is enabled.
+Actions appear as plain text links without boxes. INSPIRE links point to each paper's
+`inspirehep_id` in `papers.bib`, and their text
 comes from `site.publications.labels.inspirehep`. These links do not require
 `site.publications.badges.inspirehep`, which controls citation-count badges separately.
-Hidden action buttons do not remove the paper's data or its detail page.
+Hidden actions do not remove the paper's data or its detail page.
 
 ### Co-author links
 

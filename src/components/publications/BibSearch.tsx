@@ -32,6 +32,7 @@ interface BadgeConfig {
 }
 
 interface LinkConfig {
+  bibtex: boolean;
   html: boolean;
   pdf: boolean;
   details: boolean;
@@ -125,7 +126,7 @@ function PublicationEntry({
   const video = entry.fields.video ?? '';
   const hasAward = entry.fields.award ?? '';
   const awardName = entry.fields.award_name ?? '';
-  const bibtex_show = getBoolField(entry, 'bibtex_show');
+  const bibtex_show = links?.bibtex !== false && getBoolField(entry, 'bibtex_show');
   const annotation = entry.fields.annotation ?? '';
   const additionalInfo = entry.fields.additional_info ?? '';
 
@@ -247,7 +248,7 @@ function PublicationEntry({
             </div>
           )}
 
-          {/* Link buttons */}
+          {/* Publication action links */}
           <div className="links">
             {hasAward && (
               <button

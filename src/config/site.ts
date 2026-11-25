@@ -383,6 +383,7 @@ export const site = {
   publications: {
     /** Action-link visibility on the publication list, independent of metric badges. */
     links: {
+      bibtex: false,
       html: false,
       pdf: false,
       details: false,

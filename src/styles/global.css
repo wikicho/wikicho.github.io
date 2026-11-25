@@ -865,17 +865,16 @@
   .publications ol.bibliography li .links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem;
+    gap: 0.25rem 0.85rem;
     margin-top: 0.25rem;
   }
   .publications ol.bibliography li .links a.btn,
   .publications ol.bibliography li .links button.btn {
-    color: var(--global-text-color);
-    border: 1px solid var(--global-text-color);
-    padding: 0.15rem 0.6rem;
-    font-size: 0.75rem;
+    color: var(--global-text-color-light);
+    border: 0;
+    padding: 0;
+    font-size: 0.875rem;
     font-weight: 400;
-    border-radius: 2px;
     text-decoration: none;
     cursor: pointer;
     background: transparent;
@@ -883,8 +882,8 @@
   }
   .publications ol.bibliography li .links a.btn:hover,
   .publications ol.bibliography li .links button.btn:hover {
-    color: var(--global-theme-color);
-    border-color: var(--global-theme-color);
+    color: var(--global-text-color);
+    text-decoration: underline;
   }
   .publications ol.bibliography li .links a.award.btn,
   .publications ol.bibliography li .links button.award.btn {
@@ -1117,6 +1116,15 @@
 
 .publications ol.bibliography li .title a:hover,
 .cv #publications + .card .title a:hover {
+  color: var(--global-text-color);
+  text-decoration: underline;
+}
+
+.publications ol.bibliography li .links a.btn {
+  color: var(--global-text-color-light);
+}
+
+.publications ol.bibliography li .links a.btn:hover {
   color: var(--global-text-color);
   text-decoration: underline;
 }
