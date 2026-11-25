@@ -165,7 +165,7 @@ function PublicationEntry({
               <img
                 className="preview z-depth-1 rounded"
                 src={previewSrc}
-                alt={preview}
+                alt={title}
                 loading="lazy"
               />
             )}
