@@ -381,6 +381,13 @@ export const site = {
   // ─── Publications ─────────────────────────────────────────────────────────
 
   publications: {
+    /** Action-link visibility on the publication list, independent of metric badges. */
+    links: {
+      html: false,
+      pdf: false,
+      details: false,
+      inspirehep: true,
+    },
     /**
      * Show badges for individual publication entries.
      * Can be disabled globally here; also toggleable per entry in BibTeX.
@@ -412,6 +419,7 @@ export const site = {
     labels: {
       abstract: 'Abs',
       bibtex: 'Bib',
+      inspirehep: 'INSPIRE',
       supp: 'Supp',
       searchPlaceholder: 'Search publications\u2026',
       noResults: 'No publications match your search.',

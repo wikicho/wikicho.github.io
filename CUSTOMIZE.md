@@ -345,6 +345,15 @@ publications: {
 
 `authorLastName` auto-derives from `site.author.name`, so most users never need to set it explicitly.
 
+### Publication action links
+
+Set `site.publications.links` to control the publication-list buttons:
+`html`, `pdf`, and `details` are disabled on this site; `inspirehep` is enabled.
+INSPIRE buttons link to each paper's `inspirehep_id` in `papers.bib`, and their text
+comes from `site.publications.labels.inspirehep`. These links do not require
+`site.publications.badges.inspirehep`, which controls citation-count badges separately.
+Hidden action buttons do not remove the paper's data or its detail page.
+
 ### Co-author links
 
 Add co-author profile links to `src/data/coauthors.yml`. Any author whose last name matches a key will get a hyperlink on the publications page:

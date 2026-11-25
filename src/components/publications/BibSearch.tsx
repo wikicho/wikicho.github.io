@@ -18,6 +18,7 @@ import { InspireHEPBadge } from './InspireHEPBadge';
 interface Labels {
   abstract?: string;
   bibtex?: string;
+  inspirehep?: string;
   supp?: string;
   searchPlaceholder?: string;
   noResults?: string;
@@ -27,6 +28,13 @@ interface BadgeConfig {
   altmetric: boolean;
   dimensions: boolean;
   googleScholar: boolean;
+  inspirehep: boolean;
+}
+
+interface LinkConfig {
+  html: boolean;
+  pdf: boolean;
+  details: boolean;
   inspirehep: boolean;
 }
 
@@ -52,6 +60,8 @@ interface Props {
   scholarUserId?: string;
   /** Badge visibility flags from site.publications.badges. */
   badges?: BadgeConfig;
+  /** Action-link visibility, independent of metric badge visibility. */
+  links?: LinkConfig;
 }
 
 function entryUrl(entry: BibEntry): string {
@@ -73,6 +83,7 @@ function PublicationEntry({
   citations = {},
   scholarUserId = '',
   badges,
+  links,
 }: {
   entry: BibEntry;
   maxAuthorLimit?: number;
@@ -86,6 +97,7 @@ function PublicationEntry({
   citations?: Record<string, number>;
   scholarUserId?: string;
   badges?: BadgeConfig;
+  links?: LinkConfig;
 }) {
   const [abstractOpen, setAbstractOpen] = useState(false);
   const [bibtexOpen, setBibtexOpen] = useState(false);
@@ -275,6 +287,16 @@ function PublicationEntry({
                 arXiv
               </a>
             )}
+            {links?.inspirehep && inspirehepId && (
+              <a
+                href={`https://inspirehep.net/literature/${inspirehepId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                {labels.inspirehep ?? 'INSPIRE'}
+              </a>
+            )}
             {hal && (
               <a
                 href={`https://hal.science/${hal}`}
@@ -294,7 +316,7 @@ function PublicationEntry({
                 {labels.bibtex ?? 'Bib'}
               </button>
             )}
-            {entry.fields.html && (
+            {links?.html !== false && entry.fields.html && (
               <a
                 href={entry.fields.html}
                 target="_blank"
@@ -304,7 +326,7 @@ function PublicationEntry({
                 HTML
               </a>
             )}
-            {pdfPath && (
+            {links?.pdf !== false && pdfPath && (
               <a
                 href={pdfHref}
                 target="_blank"
@@ -384,7 +406,7 @@ function PublicationEntry({
                 Website
               </a>
             )}
-            {detailBase !== undefined && (
+            {links?.details !== false && detailBase !== undefined && (
               <a href={`${detailBase}/publications/${entry.key}/`} className="btn btn-sm z-depth-0">
                 Details
               </a>
@@ -459,6 +481,7 @@ export function BibSearch({
   citations = {},
   scholarUserId = '',
   badges,
+  links,
 }: Props) {
   const [query, setQuery] = useState('');
 
@@ -543,6 +566,7 @@ export function BibSearch({
                   citations={citations}
                   scholarUserId={scholarUserId}
                   badges={badges}
+                  links={links}
                 />
               ))}
             </ol>
